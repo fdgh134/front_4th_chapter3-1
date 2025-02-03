@@ -61,6 +61,7 @@ describe('useEventOperations', () => {
   });
 
   it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
+    server.resetHandlers();
     setupMockHandlerCreation();
 
     const { result } = renderHook(() => useEventOperations(false));
@@ -120,6 +121,7 @@ describe('useEventOperations', () => {
   });
   
   it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {
+    server.resetHandlers();
     setupMockHandlerDeletion();
 
     const { result } = renderHook(() => useEventOperations(false));

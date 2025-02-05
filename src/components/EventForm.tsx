@@ -17,9 +17,7 @@ import { useEventForm } from "../hooks/useEventForm";
 import { getTimeErrorMessage } from "../utils/timeValidation";
 import { findOverlappingEvents } from "../utils/eventOverlap";
 import { Event, EventForm as EventFormType, RepeatType } from "../types";
-import { notificationOptions } from "../constants/options";
-
-const categories = ['업무', '개인', '가족', '기타'];
+import { notificationOptions, categories } from "../constants/options";
 
 interface EventFormProps {
   events: Event[];

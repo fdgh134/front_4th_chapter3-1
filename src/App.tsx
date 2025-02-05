@@ -42,7 +42,7 @@ import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { Event, EventForm as EventFormType } from './types';
-import { notificationOptions } from './constants/options.ts';
+import { notificationOptions, weekDays } from './constants/options.ts';
 import {
   formatDate,
   formatMonth,
@@ -52,7 +52,6 @@ import {
   getWeeksAtMonth,
 } from './utils/dateUtils';
 
-const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
 function App() {
   const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);

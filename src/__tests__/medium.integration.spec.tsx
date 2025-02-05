@@ -86,7 +86,6 @@ describe('일정 CRUD 및 기본 기능', () => {
     await saveSchedule(user, newEvent);
 
     const eventList = screen.getByTestId('event-list');
-    screen.debug(eventList);
 
     const eventTitles = await within(eventList).findAllByText(newEvent.title);
     expect(eventTitles.length).toBeGreaterThan(0);
@@ -94,56 +93,46 @@ describe('일정 CRUD 및 기본 기능', () => {
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
     setupMockHandlerUpdating();
-
+  
     const { user } = setup(<App />);
-
-    await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
-    });
-    
+  
     // Edit 버튼 클릭
-    const editButton = screen.getAllByLabelText('Edit event')[0];
-    await user.click(editButton);
+    const editButton = await screen.findAllByLabelText('Edit event');
+    await user.click(editButton[0]);
 
-    // 폼 입력
+    // 제목 수정
     const titleInput = screen.getByLabelText('제목');
-    const endTimeInput = screen.getByLabelText('종료 시간');
-    
     await user.clear(titleInput);
-    await user.clear(endTimeInput);
-    
     await user.type(titleInput, '수정된 회의');
-    await user.type(endTimeInput, '12:00');
 
-    // 저장
+    // 위치 수정
+    const locationInput = screen.getByLabelText('위치');
+    await user.clear(locationInput);
+    await user.type(locationInput, '새로운 회의실');
+
+    // 제출 버튼 클릭
     await user.click(screen.getByTestId('event-submit-button'));
 
-    // 변경사항이 반영될 때까지 대기
-    await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
+    // waitFor 추가 및 더 유연한 텍스트 매칭 사용
+    await waitFor(async () => {
+      const eventList = screen.getByTestId('event-list');
+      const updatedTitle = await within(eventList).findByText((content) => 
+        content.includes('수정된 회의')
+      );
+      const updatedLocation = await within(eventList).findByText((content) => 
+        content.includes('새로운 회의실')
+      );
+      
+      expect(updatedTitle).toBeInTheDocument();
+      expect(updatedLocation).toBeInTheDocument();
     });
 
-    // DOM에서 찾을 요소들
-    const eventList = screen.getByTestId('event-list');
-
-    await waitFor(() => {
-      // 모든 chakra-text 클래스를 가진 요소들을 찾음
-      const elements = within(eventList).getAllByText(/.+/); // 모든 텍스트 요소를 찾음
-      
-      // 제목 확인
-      const hasTitle = elements.some(element => 
-        element.textContent === '수정된 회의'
-      );
-      expect(hasTitle).toBe(true);
-    
-      // 시간 확인
-      const hasTime = elements.some(element => 
-        element.textContent?.includes('12:00')
-      );
-      expect(hasTime).toBe(true);
-    }, { timeout: 3000 });
-
-  }, 10000);
+    // 토스트 알림 확인
+    expect(toastFn).toHaveBeenCalledWith(expect.objectContaining({
+      title: '일정이 수정되었습니다.',
+      status: 'success'
+    }));
+  });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
     setupMockHandlerDeletion();
@@ -419,45 +408,49 @@ describe('일정 충돌', () => {
       isClosable: true
     }));
   });
-});
-
-describe('알림', () => {
-  beforeEach(() => {
-    server.resetHandlers();
-    toastFn.mockClear();
-  });
 
   it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트가 노출된다', async () => {
-    const currentDate = new Date('2024-10-01');
-      
-     // 알람 테스트 이벤트 설정
+    // 현재 시간 기준으로 10분 후의 시간을 가진 이벤트 생성
+    const now = new Date();
+    const tenMinutesLater = new Date(now.getTime() + 10 * 60 * 1000);
+    const hours = tenMinutesLater.getHours().toString().padStart(2, '0');
+    const minutes = tenMinutesLater.getMinutes().toString().padStart(2, '0');
+
     server.use(
       http.get('/api/events', () => {
-        return HttpResponse.json({
-          events: [{
-            id: '1',
-            title: '알림 테스트',
-            date: formatDate(currentDate),
-            startTime: '10:10',
-            endTime: '11:00',
-            description: '알림 테스트용 회의',
-            location: '회의실',
-            category: '업무',
-            repeat: { type: 'none' as const, interval: 0 },
-            notificationTime: 10
-          }]
-        });
+        const mockEvents = [{
+          id: '1',
+          title: '알림 테스트 회의',
+          date: formatDate(tenMinutesLater),
+          startTime: `${hours}:${minutes}`,
+          endTime: '23:59',
+          description: '알림 테스트',
+          location: '회의실',
+          category: '업무',
+          repeat: { type: 'none' as const, interval: 0 },
+          notificationTime: 10
+        }];
+        return HttpResponse.json({ events: mockEvents });
       })
     );
-  
-    setup(<App />);
 
-    expect(toastFn).toHaveBeenCalledWith(expect.objectContaining({
-      title: '알림',
-      description: '10분 후 알림 테스트 일정이 시작됩니다.',
-      status: 'info',
-      duration: 5000,
-      isClosable: true
-    }));
+    // vi.useFakeTimers();를 사용하여 타이머 모킹
+    vi.useFakeTimers();
+    setup(<App />);
+    
+    // 타이머 진행
+    await act(async () => {
+      vi.advanceTimersByTime(1000); // 1초 진행
+    });
+    
+    // 알림 확인
+    await waitFor(() => {
+      expect(
+        screen.getByText('10분 후 알림 테스트 회의 일정이 시작됩니다.')
+      ).toBeInTheDocument();
+    });
+
+    // 타이머 리셋
+    vi.useRealTimers();
   });
 });

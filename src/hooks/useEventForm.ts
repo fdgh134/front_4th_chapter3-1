@@ -5,7 +5,7 @@ import { getTimeErrorMessage } from '../utils/timeValidation';
 
 type TimeErrorRecord = Record<'startTimeError' | 'endTimeError', string | null>;
 
-export const useEventForm = (initialEvent?: Event) => {
+export const useEventForm = (initialEvent?: Event | null) => {
   const [title, setTitle] = useState(initialEvent?.title || '');
   const [date, setDate] = useState(initialEvent?.date || '');
   const [startTime, setStartTime] = useState(initialEvent?.startTime || '');

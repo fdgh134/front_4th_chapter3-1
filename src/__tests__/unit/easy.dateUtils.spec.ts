@@ -38,25 +38,27 @@ describe('getWeekDates', () => {
   it('주중의 날짜(수요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
     const testDate = new Date('2025-02-05'); // 수요일
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2025-02-02').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2025-02-08').toISOString());
   });
 
-  it('주의 시작(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => { // 어플이 일-토 주를 사용하므로 일요일로 수정
+  it('주의 시작(일요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    // 어플이 일-토 주를 사용하므로 일요일로 수정
     const testDate = new Date('2025-02-10'); // 월요일
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2025-02-09').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2025-02-15').toISOString());
   });
 
-  it('주의 끝(토요일)에 대해 올바른 주의 날짜들을 반환한다', () => { // 어플이 일-토 주를 사용하므로 토요일로 수정
+  it('주의 끝(토요일)에 대해 올바른 주의 날짜들을 반환한다', () => {
+    // 어플이 일-토 주를 사용하므로 토요일로 수정
     const testDate = new Date('2025-02-22'); // 토요일
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2025-02-16').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2025-02-22').toISOString());
@@ -65,7 +67,7 @@ describe('getWeekDates', () => {
   it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연말)', () => {
     const testDate = new Date('2025-12-31');
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2025-12-28').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2026-01-03').toISOString());
@@ -74,7 +76,7 @@ describe('getWeekDates', () => {
   it('연도를 넘어가는 주의 날짜를 정확히 처리한다 (연초)', () => {
     const testDate = new Date('2025-01-01');
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2024-12-29').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2025-01-04').toISOString());
@@ -83,7 +85,7 @@ describe('getWeekDates', () => {
   it('윤년의 2월 29일을 포함한 주를 올바르게 처리한다', () => {
     const testDate = new Date('2024-02-29');
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2024-02-25').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2024-03-02').toISOString());
@@ -92,7 +94,7 @@ describe('getWeekDates', () => {
   it('월의 마지막 날짜를 포함한 주를 올바르게 처리한다', () => {
     const testDate = new Date('2025-02-28');
     const weekDates = getWeekDates(testDate);
-    
+
     expect(weekDates).toHaveLength(7);
     expect(weekDates[0].toISOString()).toBe(new Date('2025-02-23').toISOString());
     expect(weekDates[6].toISOString()).toBe(new Date('2025-03-01').toISOString());
@@ -124,7 +126,7 @@ describe('getEventsForDay', () => {
       location: '',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     },
     {
       id: '2',
@@ -136,7 +138,7 @@ describe('getEventsForDay', () => {
       location: '',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     },
     {
       id: '3',
@@ -148,14 +150,14 @@ describe('getEventsForDay', () => {
       location: '',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
-    }
+      notificationTime: 10,
+    },
   ];
 
   it('특정 날짜(1일)에 해당하는 이벤트만 정확히 반환한다', () => {
     const events = getEventsForDay(sampleEvents, 1);
     expect(events).toHaveLength(2);
-    expect(events.map(e => e.id)).toEqual(['1', '2']);
+    expect(events.map((e) => e.id)).toEqual(['1', '2']);
   });
 
   it('해당 날짜에 이벤트가 없을 경우 빈 배열을 반환한다', () => {

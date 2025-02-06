@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   VStack,
   Box,
@@ -7,11 +7,11 @@ import {
   IconButton,
   FormControl,
   FormLabel,
-  Input
+  Input,
 } from '@chakra-ui/react';
-import { BellIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Event } from "../types";
-import { notificationOptions } from "../constants/options";
+import { BellIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { Event } from '../types';
+import { notificationOptions } from '../constants/options';
 
 interface EventListProps {
   events: Event[];
@@ -27,12 +27,13 @@ export const EventList: React.FC<EventListProps> = ({
   notifiedEvents,
   onEdit,
   onDelete,
-  searchTerm = "",
-  onSearchChange
+  searchTerm = '',
+  onSearchChange,
 }) => {
-  const filteredEvents = events.filter(event => 
-    event.title.toLowerCase().includes(searchTerm.toLowerCase())
-    || (event.description && event.description.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredEvents = events.filter(
+    (event) =>
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (event.description && event.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -50,13 +51,7 @@ export const EventList: React.FC<EventListProps> = ({
         <Text>검색 결과가 없습니다.</Text>
       ) : (
         filteredEvents.map((event) => (
-          <Box 
-            key={event.id} 
-            borderWidth={1} 
-            borderRadius="lg" 
-            p={3} 
-            width="100%"
-          >
+          <Box key={event.id} borderWidth={1} borderRadius="lg" p={3} width="100%">
             <HStack justifyContent="space-between">
               <VStack align="start">
                 <HStack>
@@ -89,9 +84,8 @@ export const EventList: React.FC<EventListProps> = ({
                 <Text>
                   알림:{' '}
                   {
-                    notificationOptions.find(
-                      (option) => option.value === event.notificationTime
-                    )?.label
+                    notificationOptions.find((option) => option.value === event.notificationTime)
+                      ?.label
                   }
                 </Text>
               </VStack>
@@ -100,7 +94,7 @@ export const EventList: React.FC<EventListProps> = ({
                   aria-label="Edit event"
                   icon={<EditIcon />}
                   onClick={() => {
-                    console.log("EventList: Edit button clicked", event);
+                    console.log('EventList: Edit button clicked', event);
                     onEdit(event);
                   }}
                 />

@@ -6,11 +6,7 @@ import { Event } from '../../types';
 import React from 'react';
 
 const renderWithChakra = (ui: React.ReactElement) => {
-  return render(
-    <ChakraProvider>
-      {ui}
-    </ChakraProvider>
-  );
+  return render(<ChakraProvider>{ui}</ChakraProvider>);
 };
 
 describe('이벤트 겹침 다이얼로그 컴포넌트', () => {
@@ -25,7 +21,7 @@ describe('이벤트 겹침 다이얼로그 컴포넌트', () => {
       location: '',
       category: 'Work',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     },
     {
       id: '2',
@@ -37,8 +33,8 @@ describe('이벤트 겹침 다이얼로그 컴포넌트', () => {
       location: '',
       category: 'Personal',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
-    }
+      notificationTime: 10,
+    },
   ];
 
   const mockOnClose = vi.fn();
@@ -52,9 +48,9 @@ describe('이벤트 겹침 다이얼로그 컴포넌트', () => {
 
   it('겹치는 일정을 정확히 표시한다', () => {
     renderWithChakra(
-      <EventDialog 
-        isOpen={true} 
-        onClose={mockOnClose} 
+      <EventDialog
+        isOpen={true}
+        onClose={mockOnClose}
         onConfirm={mockOnConfirm}
         overlappingEvents={mockOverlappingEvents}
         cancelRef={mockCancelRef}
@@ -67,9 +63,9 @@ describe('이벤트 겹침 다이얼로그 컴포넌트', () => {
 
   it('취소 버튼 클릭 시 onClose 함수를 호출한다', () => {
     renderWithChakra(
-      <EventDialog 
-        isOpen={true} 
-        onClose={mockOnClose} 
+      <EventDialog
+        isOpen={true}
+        onClose={mockOnClose}
         onConfirm={mockOnConfirm}
         overlappingEvents={mockOverlappingEvents}
         cancelRef={mockCancelRef}
@@ -84,9 +80,9 @@ describe('이벤트 겹침 다이얼로그 컴포넌트', () => {
 
   it('계속 진행 버튼 클릭 시 onConfirm 함수를 호출한다', () => {
     renderWithChakra(
-      <EventDialog 
-        isOpen={true} 
-        onClose={mockOnClose} 
+      <EventDialog
+        isOpen={true}
+        onClose={mockOnClose}
         onConfirm={mockOnConfirm}
         overlappingEvents={mockOverlappingEvents}
         cancelRef={mockCancelRef}

@@ -14,7 +14,7 @@ describe('getFilteredEvents', () => {
       endTime: '10:00',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     },
     {
       id: '2',
@@ -26,7 +26,7 @@ describe('getFilteredEvents', () => {
       endTime: '12:00',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     },
     {
       id: '3',
@@ -38,7 +38,7 @@ describe('getFilteredEvents', () => {
       endTime: '14:00',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     },
     {
       id: '4',
@@ -50,8 +50,8 @@ describe('getFilteredEvents', () => {
       endTime: '16:00',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
-    }
+      notificationTime: 10,
+    },
   ];
 
   beforeEach(() => {
@@ -76,7 +76,7 @@ describe('getFilteredEvents', () => {
     const events = createMockEvents();
     const result = getFilteredEvents(events, '', new Date('2024-07-01'), 'week');
     expect(result).toHaveLength(3);
-    expect(new Set(result.map(event => event.date))).toEqual(
+    expect(new Set(result.map((event) => event.date))).toEqual(
       new Set(['2024-06-30', '2024-07-01', '2024-07-03'])
     );
   });
@@ -84,10 +84,10 @@ describe('getFilteredEvents', () => {
   it('월간 뷰에서 2024년 7월의 모든 이벤트를 반환한다', () => {
     const events = createMockEvents();
     const result = getFilteredEvents(events, '', new Date('2024-07-01'), 'month');
-    const julyEvents = events.filter(event => event.date.startsWith('2024-07'));
-    
+    const julyEvents = events.filter((event) => event.date.startsWith('2024-07'));
+
     expect(result).toHaveLength(julyEvents.length);
-    result.forEach(event => {
+    result.forEach((event) => {
       expect(event.date.startsWith('2024-07')).toBe(true);
     });
   });
@@ -95,36 +95,41 @@ describe('getFilteredEvents', () => {
   it("검색어 '이벤트'와 주간 뷰 필터링을 동시에 적용한다", () => {
     const events = createMockEvents();
     const result = getFilteredEvents(events, '이벤트', new Date('2024-07-01'), 'week');
-    
+
     expect(result).toHaveLength(2); // 6/30~7/6 기간의 '이벤트' 포함 이벤트
-    expect(result.every(event => {
-      const eventDate = new Date(event.date);
-      const weekStart = new Date('2024-06-30');
-      const weekEnd = new Date('2024-07-06');
-      return eventDate >= weekStart && 
-             eventDate <= weekEnd && 
-             event.title.toLowerCase().includes('이벤트');
-    })).toBe(true);
+    expect(
+      result.every((event) => {
+        const eventDate = new Date(event.date);
+        const weekStart = new Date('2024-06-30');
+        const weekEnd = new Date('2024-07-06');
+        return (
+          eventDate >= weekStart &&
+          eventDate <= weekEnd &&
+          event.title.toLowerCase().includes('이벤트')
+        );
+      })
+    ).toBe(true);
   });
 
   it('검색어가 없을 때 모든 이벤트를 반환한다', () => {
     const events = createMockEvents();
     const result = getFilteredEvents(events, '', new Date('2024-07-01'), 'month');
-    const julyEvents = events.filter(event => event.date.startsWith('2024-07'));
-    
+    const julyEvents = events.filter((event) => event.date.startsWith('2024-07'));
+
     expect(result).toHaveLength(julyEvents.length);
-    expect(result.every(event => event.date.startsWith('2024-07'))).toBe(true);
+    expect(result.every((event) => event.date.startsWith('2024-07'))).toBe(true);
   });
 
   it('검색어가 대소문자를 구분하지 않고 작동한다', () => {
     const events = createMockEvents();
     const result = getFilteredEvents(events, 'EVENT', new Date('2024-07-01'), 'month');
-    const expectedEvents = events.filter(event => 
-      event.date.startsWith('2024-07') && 
-      (event.title.toLowerCase().includes('event') || 
-       event.description.toLowerCase().includes('event'))
+    const expectedEvents = events.filter(
+      (event) =>
+        event.date.startsWith('2024-07') &&
+        (event.title.toLowerCase().includes('event') ||
+          event.description.toLowerCase().includes('event'))
     );
-    
+
     expect(result).toHaveLength(expectedEvents.length);
   });
 
@@ -132,7 +137,7 @@ describe('getFilteredEvents', () => {
     const events = createMockEvents();
     const result = getFilteredEvents(events, '', new Date('2024-07-01'), 'week');
     expect(result).toHaveLength(3);
-    const dates = result.map(event => event.date);
+    const dates = result.map((event) => event.date);
     expect(dates).toContain('2024-06-30');
     expect(dates).toContain('2024-07-01');
   });

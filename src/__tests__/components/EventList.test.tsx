@@ -14,22 +14,18 @@ const mockEvents = [
     description: 'Test description',
     location: 'Test location',
     category: 'Work',
-    repeat: { 
-      type: 'none', 
+    repeat: {
+      type: 'none',
       interval: 1,
-      endDate: undefined 
+      endDate: undefined,
     },
-    notificationTime: 10
-  }
+    notificationTime: 10,
+  },
 ] as Event[];
 
 // Chakra UI 컴포넌트를 감싸는 래퍼 함수
 const renderWithChakra = (ui: React.ReactElement) => {
-  return render(
-    <ChakraProvider>
-      {ui}
-    </ChakraProvider>
-  );
+  return render(<ChakraProvider>{ui}</ChakraProvider>);
 };
 
 describe('이벤트 목록 컴포넌트', () => {
@@ -45,10 +41,10 @@ describe('이벤트 목록 컴포넌트', () => {
 
   it('이벤트를 정확히 렌더링한다', () => {
     renderWithChakra(
-      <EventList 
-        events={mockEvents} 
-        notifiedEvents={[]} 
-        onEdit={mockOnEdit} 
+      <EventList
+        events={mockEvents}
+        notifiedEvents={[]}
+        onEdit={mockOnEdit}
         onDelete={mockOnDelete}
         onSearchChange={mockOnSearchChange}
       />
@@ -60,10 +56,10 @@ describe('이벤트 목록 컴포넌트', () => {
 
   it('편집 버튼 클릭 시 onEdit 함수를 호출한다', () => {
     renderWithChakra(
-      <EventList 
-        events={mockEvents} 
-        notifiedEvents={[]} 
-        onEdit={mockOnEdit} 
+      <EventList
+        events={mockEvents}
+        notifiedEvents={[]}
+        onEdit={mockOnEdit}
         onDelete={mockOnDelete}
         onSearchChange={mockOnSearchChange}
       />
@@ -77,10 +73,10 @@ describe('이벤트 목록 컴포넌트', () => {
 
   it('삭제 버튼 클릭 시 onDelete 함수를 호출한다', () => {
     renderWithChakra(
-      <EventList 
-        events={mockEvents} 
-        notifiedEvents={[]} 
-        onEdit={mockOnEdit} 
+      <EventList
+        events={mockEvents}
+        notifiedEvents={[]}
+        onEdit={mockOnEdit}
         onDelete={mockOnDelete}
         onSearchChange={mockOnSearchChange}
       />
@@ -94,10 +90,10 @@ describe('이벤트 목록 컴포넌트', () => {
 
   it('검색어에 따라 이벤트를 필터링한다', () => {
     renderWithChakra(
-      <EventList 
-        events={mockEvents} 
-        notifiedEvents={[]} 
-        onEdit={mockOnEdit} 
+      <EventList
+        events={mockEvents}
+        notifiedEvents={[]}
+        onEdit={mockOnEdit}
         onDelete={mockOnDelete}
         searchTerm="Test"
         onSearchChange={mockOnSearchChange}

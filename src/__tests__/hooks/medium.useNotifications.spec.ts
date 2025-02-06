@@ -32,7 +32,7 @@ describe('useNotifications', () => {
       title: '팀 회의',
       date: formatDate(new Date(currentTime)),
       startTime: parseHM(currentTime + 10 * 60 * 1000), // 10분 후
-      endTime: parseHM(currentTime + 60 * 60 * 1000),  // 1시간 후
+      endTime: parseHM(currentTime + 60 * 60 * 1000), // 1시간 후
       description: '팀 회의입니다',
       location: '회의실',
       category: '업무',
@@ -44,7 +44,7 @@ describe('useNotifications', () => {
       title: '점심 식사',
       date: formatDate(new Date(currentTime)),
       startTime: parseHM(currentTime + 120 * 60 * 1000), // 2시간 후
-      endTime: parseHM(currentTime + 180 * 60 * 1000),   // 3시간 후
+      endTime: parseHM(currentTime + 180 * 60 * 1000), // 3시간 후
       description: '점심 식사',
       location: '구내 식당',
       category: '개인',
@@ -55,7 +55,7 @@ describe('useNotifications', () => {
 
   it('초기 상태에서는 알림이 없어야 한다', () => {
     const { result } = renderHook(() => useNotifications([]));
-    
+
     expect(result.current.notifications).toHaveLength(0);
     expect(result.current.notifiedEvents).toHaveLength(0);
   });
@@ -108,7 +108,7 @@ describe('useNotifications', () => {
     act(() => {
       callback();
     });
-    
+
     // 첫 번째 알림 발생 확인
     expect(result.current.notifications).toHaveLength(1);
     expect(result.current.notifiedEvents).toContain('1');
@@ -122,5 +122,4 @@ describe('useNotifications', () => {
     expect(result.current.notifications).toHaveLength(1);
     expect(result.current.notifiedEvents).toContain('1');
   });
-
 });

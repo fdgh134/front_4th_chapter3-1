@@ -1,4 +1,4 @@
-import { Box, Flex, } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 
 import { EventForm } from './components/EventForm.tsx';
@@ -29,15 +29,11 @@ function App() {
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
-  const { handleSaveEvent } = useEventFormActions(
-    events, 
-    saveEvent, 
-    (overlapping, eventData) => {
-      setOverlappingEvents(overlapping);
-      setEventToSave(eventData);
-      setIsOverlapDialogOpen(true);
-    }
-  );
+  const { handleSaveEvent } = useEventFormActions(events, saveEvent, (overlapping, eventData) => {
+    setOverlappingEvents(overlapping);
+    setEventToSave(eventData);
+    setIsOverlapDialogOpen(true);
+  });
 
   const handleDialogConfirm = async () => {
     setIsOverlapDialogOpen(false);
@@ -73,8 +69,8 @@ function App() {
           saveEvent={handleSaveEvent}
           formHook={formHook}
         />
-        
-        <CalendarView 
+
+        <CalendarView
           view={view}
           currentDate={currentDate}
           filteredEvents={filteredEvents}
@@ -84,11 +80,11 @@ function App() {
           onNavigate={navigate}
         />
 
-        <EventList 
-          events={filteredEvents} 
-          notifiedEvents={notifiedEvents} 
-          onEdit={handleEventEdit} 
-          onDelete={handleEventDelete} 
+        <EventList
+          events={filteredEvents}
+          notifiedEvents={notifiedEvents}
+          onEdit={handleEventEdit}
+          onDelete={handleEventDelete}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
         />
@@ -102,10 +98,7 @@ function App() {
         cancelRef={cancelRef}
       />
 
-      <NotificationList 
-        notifications={notifications} 
-        onRemove={handleRemoveNotification}
-      />
+      <NotificationList notifications={notifications} onRemove={handleRemoveNotification} />
     </Box>
   );
 }

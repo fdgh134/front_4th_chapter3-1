@@ -74,7 +74,7 @@ const DayEvent = ({ event, isNotified }: DayEventProps) => (
 
 const WeekView = ({ currentDate, filteredEvents, notifiedEvents }: WeekViewProps) => {
   const weekDates = getWeekDates(currentDate);
-  
+
   return (
     <VStack data-testid="week-view" align="stretch" w="full" spacing={4}>
       <Heading size="md">{formatWeek(currentDate)}</Heading>

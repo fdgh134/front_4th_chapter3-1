@@ -1,11 +1,4 @@
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  CloseButton,
-  VStack,
-} from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Box, CloseButton, VStack } from '@chakra-ui/react';
 
 interface Notification {
   id: string;

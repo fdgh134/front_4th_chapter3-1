@@ -12,9 +12,10 @@ import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
 
 // ? Medium: 아래 toastFn과 mock과 이 fn은 무엇을 해줄까요?
-const toastFn = vi.fn(); 
+const toastFn = vi.fn();
 
-vi.mock('@chakra-ui/react', async () => { // @chakra-ui/react 모듈 전체를 모킹
+vi.mock('@chakra-ui/react', async () => {
+  // @chakra-ui/react 모듈 전체를 모킹
   const actual = await vi.importActual('@chakra-ui/react'); // 실제 Chakra UI 모듈의 내용을 가져옴
   return {
     ...actual, // 기존 Chakra UI의 모든 기능을 그대로 유지
@@ -30,25 +31,27 @@ describe('useEventOperations', () => {
   });
 
   it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {
-    const mockEvents: Event[] = [{
-      id: '1',
-      title: '팀 회의',
-      description: '프로젝트 진행 상황 공유',
-      location: '회의실 A',
-      date: '2024-10-01',
-      startTime: '10:00',
-      endTime: '11:00',
-      category: '업무',
-      repeat: { type: 'none' as const, interval: 1 },
-      notificationTime: 10
-    }];
+    const mockEvents: Event[] = [
+      {
+        id: '1',
+        title: '팀 회의',
+        description: '프로젝트 진행 상황 공유',
+        location: '회의실 A',
+        date: '2024-10-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        category: '업무',
+        repeat: { type: 'none' as const, interval: 1 },
+        notificationTime: 10,
+      },
+    ];
 
     setupMockHandlerCreation(mockEvents);
 
     const { result } = renderHook(() => useEventOperations(false));
 
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
     expect(result.current.events).toEqual(mockEvents);
@@ -73,7 +76,7 @@ describe('useEventOperations', () => {
       endTime: '15:00',
       category: '업무',
       repeat: { type: 'none' as const, interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     };
 
     await act(async () => {
@@ -87,7 +90,7 @@ describe('useEventOperations', () => {
       isClosable: true,
     });
   });
-  
+
   it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
     setupMockHandlerUpdating();
 
@@ -117,7 +120,7 @@ describe('useEventOperations', () => {
       isClosable: true,
     });
   });
-  
+
   it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {
     setupMockHandlerDeletion();
 
@@ -134,7 +137,7 @@ describe('useEventOperations', () => {
       isClosable: true,
     });
   });
-  
+
   it("이벤트 로딩 실패 시 '이벤트 로딩 실패'라는 텍스트와 함께 에러 토스트가 표시되어야 한다", async () => {
     server.use(
       http.get('/api/events', () => {
@@ -145,7 +148,7 @@ describe('useEventOperations', () => {
     renderHook(() => useEventOperations(false));
 
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
     expect(toastFn).toHaveBeenCalledWith({
@@ -155,7 +158,7 @@ describe('useEventOperations', () => {
       isClosable: true,
     });
   });
-  
+
   it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
     server.use(
       http.put('/api/events/:id', () => {
@@ -190,7 +193,7 @@ describe('useEventOperations', () => {
       isClosable: true,
     });
   });
-  
+
   it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
     server.use(
       http.delete('/api/events/:id', () => {
@@ -215,4 +218,3 @@ describe('useEventOperations', () => {
     });
   });
 });
-

@@ -1,5 +1,5 @@
-import React from "react";
-import { 
+import React from 'react';
+import {
   Button,
   Checkbox,
   FormControl,
@@ -11,13 +11,13 @@ import {
   Tooltip,
   VStack,
   useToast,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { useEventForm } from "../hooks/useEventForm";
-import { getTimeErrorMessage } from "../utils/timeValidation";
-import { findOverlappingEvents } from "../utils/eventOverlap";
-import { Event, EventForm as EventFormType, RepeatType } from "../types";
-import { notificationOptions, categories } from "../constants/options";
+import { useEventForm } from '../hooks/useEventForm';
+import { getTimeErrorMessage } from '../utils/timeValidation';
+import { findOverlappingEvents } from '../utils/eventOverlap';
+import { Event, EventForm as EventFormType, RepeatType } from '../types';
+import { notificationOptions, categories } from '../constants/options';
 
 interface EventFormProps {
   events: Event[];
@@ -27,12 +27,7 @@ interface EventFormProps {
   formHook: ReturnType<typeof useEventForm>;
 }
 
-export const EventForm: React.FC<EventFormProps> = ({
-  events, 
-  onOverlap, 
-  saveEvent, 
-  formHook
-}) => {
+export const EventForm: React.FC<EventFormProps> = ({ events, onOverlap, saveEvent, formHook }) => {
   const {
     title,
     date,
@@ -71,7 +66,7 @@ export const EventForm: React.FC<EventFormProps> = ({
   // useEffect(() => {
   //   if (initialEvent && initialEvent !== localEditingEvent) {
   //     setLocalEditingEvent(initialEvent);
-      
+
   //     // 기존 데이터로 초기화되는 것을 방지하기 위해 약간의 지연 추가
   //     const timeoutId = setTimeout(() => {
   //       setTitle(initialEvent.title);

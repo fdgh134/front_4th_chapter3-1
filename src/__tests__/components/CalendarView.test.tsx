@@ -6,11 +6,7 @@ import { Event } from '../../types';
 import { formatWeek, formatMonth } from '../../utils/dateUtils';
 
 const renderWithChakra = (ui: React.ReactElement) => {
-  return render(
-    <ChakraProvider>
-      {ui}
-    </ChakraProvider>
-  );
+  return render(<ChakraProvider>{ui}</ChakraProvider>);
 };
 
 describe('캘린더 뷰 컴포넌트', () => {
@@ -26,12 +22,12 @@ describe('캘린더 뷰 컴포넌트', () => {
       location: '',
       category: 'Work',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
-    }
+      notificationTime: 10,
+    },
   ];
   const mockNotifiedEvents: string[] = ['1'];
   const mockHolidays: { [key: string]: string } = {
-    '2023-05-15': '스승의 날'
+    '2023-05-15': '스승의 날',
   };
 
   const mockOnViewChange = vi.fn();
@@ -44,7 +40,7 @@ describe('캘린더 뷰 컴포넌트', () => {
 
   it('주간 뷰를 정확히 렌더링한다', () => {
     renderWithChakra(
-      <CalendarView 
+      <CalendarView
         view="week"
         currentDate={mockCurrentDate}
         filteredEvents={mockFilteredEvents}
@@ -62,7 +58,7 @@ describe('캘린더 뷰 컴포넌트', () => {
 
   it('월간 뷰를 정확히 렌더링한다', () => {
     renderWithChakra(
-      <CalendarView 
+      <CalendarView
         view="month"
         currentDate={mockCurrentDate}
         filteredEvents={mockFilteredEvents}
@@ -80,7 +76,7 @@ describe('캘린더 뷰 컴포넌트', () => {
 
   it('이전/다음 버튼 클릭 시 onNavigate 함수를 호출한다', () => {
     renderWithChakra(
-      <CalendarView 
+      <CalendarView
         view="week"
         currentDate={mockCurrentDate}
         filteredEvents={mockFilteredEvents}
@@ -103,7 +99,7 @@ describe('캘린더 뷰 컴포넌트', () => {
 
   it('뷰 변경 시 onViewChange 함수를 호출한다', () => {
     renderWithChakra(
-      <CalendarView 
+      <CalendarView
         view="week"
         currentDate={mockCurrentDate}
         filteredEvents={mockFilteredEvents}

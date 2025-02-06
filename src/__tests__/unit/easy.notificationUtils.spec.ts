@@ -28,9 +28,9 @@ describe('getUpcomingEvents', () => {
       endTime: '11:10',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10 // 10분 전 알림
+      notificationTime: 10, // 10분 전 알림
     };
-    
+
     const result = getUpcomingEvents([event], now, []);
     expect(result).toHaveLength(1);
   });
@@ -49,9 +49,9 @@ describe('getUpcomingEvents', () => {
       endTime: '11:10',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     };
-    
+
     const result = getUpcomingEvents([event], now, ['1']);
     expect(result).toHaveLength(0);
   });
@@ -70,9 +70,9 @@ describe('getUpcomingEvents', () => {
       endTime: '13:30',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     };
-    
+
     const result = getUpcomingEvents([event], now, []);
     expect(result).toHaveLength(0);
   });
@@ -91,9 +91,9 @@ describe('getUpcomingEvents', () => {
       endTime: '10:00',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     };
-    
+
     const result = getUpcomingEvents([event], now, []);
     expect(result).toHaveLength(0);
   });
@@ -111,9 +111,9 @@ describe('createNotificationMessage', () => {
       endTime: '12:00',
       category: '',
       repeat: { type: 'none', interval: 1 },
-      notificationTime: 10
+      notificationTime: 10,
     };
-    
+
     const message = createNotificationMessage(event);
     expect(message).toBe('10분 후 테스트 이벤트 일정이 시작됩니다.');
   });

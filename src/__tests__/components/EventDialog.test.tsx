@@ -1,9 +1,9 @@
+import React from 'react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { EventDialog } from '../../components/EventDialog';
 import { Event } from '../../types';
-import React from 'react';
 
 const renderWithChakra = (ui: React.ReactElement) => {
   return render(<ChakraProvider>{ui}</ChakraProvider>);

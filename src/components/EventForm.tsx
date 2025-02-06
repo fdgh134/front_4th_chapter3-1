@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { 
   Button,
   Checkbox,
@@ -50,25 +50,39 @@ export const EventForm: React.FC<EventFormProps> = ({
     endTimeError,
     editingEvent,
     resetForm,
-    ...formMethods
+    setTitle,
+    setDate,
+    handleStartTimeChange,
+    handleEndTimeChange,
+    setDescription,
+    setLocation,
+    setCategory,
+    setIsRepeating,
+    setRepeatType,
+    setRepeatInterval,
+    setRepeatEndDate,
+    setNotificationTime,
+    editEvent
   } = formHook;
 
   const toast = useToast();
 
-  const addOrUpdateEvent = async () => {
-    if (!title || !date || !startTime || !endTime) {
-      toast({
-        title: '필수 정보를 모두 입력해주세요.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
+  useEffect(() => {
+    if (initialEvent) {
+      editEvent(initialEvent);
     }
+  }, [initialEvent, editEvent]);
 
-    if (startTimeError || endTimeError) {
+  const addOrUpdateEvent = async () => {
+    const missingFields = [];
+    if (!title) missingFields.push('제목');
+    if (!date) missingFields.push('날짜');
+    if (!startTime) missingFields.push('시작 시간');
+    if (!endTime) missingFields.push('종료 시간');
+
+    if (missingFields.length > 0) {
       toast({
-        title: '시간 설정을 확인해주세요.',
+        title: `다음 정보를 입력해주세요: ${missingFields.join(', ')}`,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -108,12 +122,12 @@ export const EventForm: React.FC<EventFormProps> = ({
 
       <FormControl>
         <FormLabel>제목</FormLabel>
-        <Input value={title} onChange={(e) => formMethods.setTitle(e.target.value)} />
+        <Input value={title} onChange={(e) => setTitle(e.target.value)} />
       </FormControl>
 
       <FormControl>
         <FormLabel>날짜</FormLabel>
-        <Input type="date" value={date} onChange={(e) => formMethods.setDate(e.target.value)} />
+        <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
       </FormControl>
 
       <HStack width="100%">
@@ -123,7 +137,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             <Input
               type="time"
               value={startTime}
-              onChange={formMethods.handleStartTimeChange}
+              onChange={handleStartTimeChange}
               onBlur={() => getTimeErrorMessage(startTime, endTime)}
               isInvalid={!!startTimeError}
             />
@@ -135,7 +149,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             <Input
               type="time"
               value={endTime}
-              onChange={formMethods.handleEndTimeChange}
+              onChange={handleEndTimeChange}
               onBlur={() => getTimeErrorMessage(startTime, endTime)}
               isInvalid={!!endTimeError}
             />
@@ -145,17 +159,17 @@ export const EventForm: React.FC<EventFormProps> = ({
 
       <FormControl>
         <FormLabel>설명</FormLabel>
-        <Input value={description} onChange={(e) => formMethods.setDescription(e.target.value)} />
+        <Input value={description} onChange={(e) => setDescription(e.target.value)} />
       </FormControl>
 
       <FormControl>
         <FormLabel>위치</FormLabel>
-        <Input value={location} onChange={(e) => formMethods.setLocation(e.target.value)} />
+        <Input value={location} onChange={(e) => setLocation(e.target.value)} />
       </FormControl>
 
       <FormControl>
         <FormLabel>카테고리</FormLabel>
-        <Select value={category} onChange={(e) => formMethods.setCategory(e.target.value)}>
+        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">카테고리 선택</option>
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -167,7 +181,7 @@ export const EventForm: React.FC<EventFormProps> = ({
 
       <FormControl>
         <FormLabel>반복 설정</FormLabel>
-        <Checkbox isChecked={isRepeating} onChange={(e) => formMethods.setIsRepeating(e.target.checked)}>
+        <Checkbox isChecked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)}>
           반복 일정
         </Checkbox>
       </FormControl>
@@ -176,7 +190,7 @@ export const EventForm: React.FC<EventFormProps> = ({
         <FormLabel>알림 설정</FormLabel>
         <Select
           value={notificationTime}
-          onChange={(e) => formMethods.setNotificationTime(Number(e.target.value))}
+          onChange={(e) => setNotificationTime(Number(e.target.value))}
         >
           {notificationOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -192,7 +206,7 @@ export const EventForm: React.FC<EventFormProps> = ({
             <FormLabel>반복 유형</FormLabel>
             <Select
               value={repeatType}
-              onChange={(e) => formMethods.setRepeatType(e.target.value as RepeatType)}
+              onChange={(e) => setRepeatType(e.target.value as RepeatType)}
             >
               <option value="daily">매일</option>
               <option value="weekly">매주</option>
@@ -206,7 +220,7 @@ export const EventForm: React.FC<EventFormProps> = ({
               <Input
                 type="number"
                 value={repeatInterval}
-                onChange={(e) => formMethods.setRepeatInterval(Number(e.target.value))}
+                onChange={(e) => setRepeatInterval(Number(e.target.value))}
                 min={1}
               />
             </FormControl>
@@ -215,7 +229,7 @@ export const EventForm: React.FC<EventFormProps> = ({
               <Input
                 type="date"
                 value={repeatEndDate}
-                onChange={(e) => formMethods.setRepeatEndDate(e.target.value)}
+                onChange={(e) => setRepeatEndDate(e.target.value)}
               />
             </FormControl>
           </HStack>

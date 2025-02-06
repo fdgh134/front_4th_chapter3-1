@@ -99,7 +99,10 @@ export const EventList: React.FC<EventListProps> = ({
                 <IconButton
                   aria-label="Edit event"
                   icon={<EditIcon />}
-                  onClick={() => onEdit(event)}
+                  onClick={() => {
+                    console.log("EventList: Edit button clicked", event);
+                    onEdit(event);
+                  }}
                 />
                 <IconButton
                   aria-label="Delete event"

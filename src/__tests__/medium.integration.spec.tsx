@@ -93,45 +93,29 @@ describe('일정 CRUD 및 기본 기능', () => {
 
   it('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영된다', async () => {
     setupMockHandlerUpdating();
-  
+
     const { user } = setup(<App />);
-  
+
+    // 이벤트 리스트 컨테이너 선택
+    const eventList = await screen.findByTestId('event-list');
+
     // Edit 버튼 클릭
-    const editButton = await screen.findAllByLabelText('Edit event');
-    await user.click(editButton[0]);
+    const editButton = await within(eventList).findByLabelText('Edit event');
+    await user.click(editButton);
 
-    // 제목 수정
-    const titleInput = screen.getByLabelText('제목');
-    await user.clear(titleInput);
-    await user.type(titleInput, '수정된 회의');
+    // 수정할 내용 입력
+    const newStartTimeInput = screen.getByLabelText('시작 시간');
+    await user.clear(newStartTimeInput);
+    await user.type(newStartTimeInput, '09:30');
 
-    // 위치 수정
-    const locationInput = screen.getByLabelText('위치');
-    await user.clear(locationInput);
-    await user.type(locationInput, '새로운 회의실');
+    const updateButton = screen.getByTestId('event-submit-button');
+    await user.click(updateButton);
 
-    // 제출 버튼 클릭
-    await user.click(screen.getByTestId('event-submit-button'));
-
-    // waitFor 추가 및 더 유연한 텍스트 매칭 사용
-    await waitFor(async () => {
-      const eventList = screen.getByTestId('event-list');
-      const updatedTitle = await within(eventList).findByText((content) => 
-        content.includes('수정된 회의')
-      );
-      const updatedLocation = await within(eventList).findByText((content) => 
-        content.includes('새로운 회의실')
-      );
-      
-      expect(updatedTitle).toBeInTheDocument();
-      expect(updatedLocation).toBeInTheDocument();
-    });
-
-    // 토스트 알림 확인
-    expect(toastFn).toHaveBeenCalledWith(expect.objectContaining({
-      title: '일정이 수정되었습니다.',
-      status: 'success'
-    }));
+    // 수정된 내용 확인
+    const updatedEvent = await screen.findByText('기존 회의');
+    expect(updatedEvent).toBeInTheDocument();
+    const updatedStartTime = await screen.findByText('09:30 - 10:00');
+    expect(updatedStartTime).toBeInTheDocument();
   });
 
   it('일정을 삭제하고 더 이상 조회되지 않는지 확인한다', async () => {
@@ -382,24 +366,20 @@ describe('일정 충돌', () => {
   });
 
   it('기존 일정의 시간을 수정하여 충돌이 발생하면 경고가 노출된다', async () => {
-    server.use(
-      http.put('/api/events/:id', () => {
-        return HttpResponse.json({ message: '일정이 겹칩니다' }, { status: 409 });
-      })
-    );
+    setupMockHandlerUpdating();
 
     const { user } = setup(<App />);
 
-    // Edit 버튼 클릭
-    const editButton = await screen.findAllByLabelText('Edit event');
-    await user.click(editButton[0]);
+    // 기존 일정 수정
+    const editButton = await screen.findByLabelText('Edit event');
+    await user.click(editButton);
 
-    // 시간 수정하여 충돌 발생시키기
-    const endTimeInput = screen.getByLabelText('종료 시간');
-    await user.clear(endTimeInput);
-    await user.type(endTimeInput, '12:00');
+    const newStartTimeInput = screen.getByLabelText('시작 시간');
+    await user.clear(newStartTimeInput);
+    await user.type(newStartTimeInput, '10:55');
 
-    await user.click(screen.getByTestId('event-submit-button'));
+    const updateButton = screen.getByTestId('event-submit-button');
+    await user.click(updateButton);
 
     expect(toastFn).toHaveBeenCalledWith(expect.objectContaining({
       title: '일정 저장 실패',

@@ -55,18 +55,19 @@ export const useEventForm = (initialEvent?: Event | null) => {
 
   const editEvent = (event: Event) => {
     setEditingEvent(event);
-    setTitle(event.title);
-    setDate(event.date);
-    setStartTime(event.startTime);
-    setEndTime(event.endTime);
-    setDescription(event.description);
-    setLocation(event.location);
-    setCategory(event.category);
+
+    setTitle(event.title || '');
+    setDate(event.date || '');
+    setStartTime(event.startTime || '');
+    setEndTime(event.endTime || '');
+    setDescription(event.description || '');
+    setLocation(event.location || '');
+    setCategory(event.category || '');
     setIsRepeating(event.repeat.type !== 'none');
-    setRepeatType(event.repeat.type);
-    setRepeatInterval(event.repeat.interval);
+    setRepeatType(event.repeat.type || 'none');
+    setRepeatInterval(event.repeat.interval || 1);
     setRepeatEndDate(event.repeat.endDate || '');
-    setNotificationTime(event.notificationTime);
+    setNotificationTime(event.notificationTime || 10);
   };
 
   return {

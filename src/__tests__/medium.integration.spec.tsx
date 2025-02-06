@@ -9,7 +9,6 @@ import { formatDate } from '../utils/dateUtils';
 import {
   setupMockHandlerCreation,
   setupMockHandlerDeletion,
-  setupMockHandlerUpdating,
 } from '../__mocks__/handlersUtils';
 import App from '../App';
 import { server } from '../setupTests';

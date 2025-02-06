@@ -7,6 +7,7 @@ import { CalendarView } from './components/CalendarView.tsx';
 import { EventDialog } from './components/EventDialog.tsx';
 import { NotificationList } from './components/NotificationList.tsx';
 import { useCalendarView } from './hooks/useCalendarView.ts';
+import { useEventFormActions } from './hooks/useEventFormActions.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
 import { useEventForm } from './hooks/useEventForm.ts';
@@ -28,11 +29,15 @@ function App() {
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm } = useSearch(events, currentDate, view);
 
-  const handleOverlap = (overlapping: Event[], eventData: Event | EventFormType) => {
-    setOverlappingEvents(overlapping);
-    setEventToSave(eventData);
-    setIsOverlapDialogOpen(true);
-  };
+  const { handleSaveEvent } = useEventFormActions(
+    events, 
+    saveEvent, 
+    (overlapping, eventData) => {
+      setOverlappingEvents(overlapping);
+      setEventToSave(eventData);
+      setIsOverlapDialogOpen(true);
+    }
+  );
 
   const handleDialogConfirm = async () => {
     setIsOverlapDialogOpen(false);
@@ -60,8 +65,12 @@ function App() {
       <Flex gap={6} h="full">
         <EventForm
           events={events}
-          onOverlap={handleOverlap}
-          saveEvent={saveEvent}
+          onOverlap={(overlapping, eventData) => {
+            setOverlappingEvents(overlapping);
+            setEventToSave(eventData);
+            setIsOverlapDialogOpen(true);
+          }}
+          saveEvent={handleSaveEvent}
           formHook={formHook}
         />
         

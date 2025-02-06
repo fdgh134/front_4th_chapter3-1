@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 import {
   setupMockHandlerCreation,
@@ -25,6 +26,7 @@ vi.mock('@chakra-ui/react', async () => { // @chakra-ui/react 모듈 전체를 �
 describe('useEventOperations', () => {
   beforeEach(() => {
     toastFn.mockClear(); // useToast 함수가 호출된 내역을 초기화
+    server.resetHandlers();
   });
 
   it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {
@@ -58,7 +60,6 @@ describe('useEventOperations', () => {
   });
 
   it('정의된 이벤트 정보를 기준으로 적절하게 저장이 된다', async () => {
-    server.resetHandlers();
     setupMockHandlerCreation();
 
     const { result } = renderHook(() => useEventOperations(false));
@@ -89,7 +90,7 @@ describe('useEventOperations', () => {
   
   it("새로 정의된 'title', 'endTime' 기준으로 적절하게 일정이 업데이트 된다", async () => {
     setupMockHandlerUpdating();
-    
+
     const { result } = renderHook(() => useEventOperations(true));
 
     const updatedEvent: Event = {
@@ -118,7 +119,6 @@ describe('useEventOperations', () => {
   });
   
   it('존재하는 이벤트 삭제 시 에러없이 아이템이 삭제된다.', async () => {
-    server.resetHandlers();
     setupMockHandlerDeletion();
 
     const { result } = renderHook(() => useEventOperations(false));
@@ -159,7 +159,10 @@ describe('useEventOperations', () => {
   it("존재하지 않는 이벤트 수정 시 '일정 저장 실패'라는 토스트가 노출되며 에러 처리가 되어야 한다", async () => {
     server.use(
       http.put('/api/events/:id', () => {
-        return new HttpResponse(null, { status: 404 });
+        return HttpResponse.json(null, { status: 404 });
+      }),
+      http.get('/api/events', () => {
+        return HttpResponse.json({ events: [] }, { status: 200 });
       })
     );
 
@@ -191,7 +194,10 @@ describe('useEventOperations', () => {
   it("네트워크 오류 시 '일정 삭제 실패'라는 텍스트가 노출되며 이벤트 삭제가 실패해야 한다", async () => {
     server.use(
       http.delete('/api/events/:id', () => {
-        return new HttpResponse(null, { status: 500 });
+        return HttpResponse.json(null, { status: 500 });
+      }),
+      http.get('/api/events', () => {
+        return HttpResponse.json({ events: [] }, { status: 200 });
       })
     );
 

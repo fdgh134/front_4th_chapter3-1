@@ -11,10 +11,7 @@ import { server } from '../../setupTests.ts';
 import { Event } from '../../types.ts';
 
 // ? Medium: 아래 toastFn과 mock과 이 fn은 무엇을 해줄까요?
-// Chakra UI의 useToast를 모킹(mocking)하는 코드
 const toastFn = vi.fn(); 
-// Vitest의 mock 함수 생성. 이 함수는 호출 여부, 호출 횟수, 
-// 호출 시 전달된 인자 등을 추적할 수 있음
 
 vi.mock('@chakra-ui/react', async () => { // @chakra-ui/react 모듈 전체를 모킹
   const actual = await vi.importActual('@chakra-ui/react'); // 실제 Chakra UI 모듈의 내용을 가져옴

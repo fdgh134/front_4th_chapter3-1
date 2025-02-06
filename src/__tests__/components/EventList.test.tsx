@@ -1,6 +1,6 @@
 import React from 'react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { ChakraProvider } from '@chakra-ui/react';
 import { EventList } from '../../components/EventList';
 import { Event } from '../../types';

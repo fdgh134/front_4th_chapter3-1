@@ -8,8 +8,8 @@ import { EventDialog } from './components/EventDialog.tsx';
 import { NotificationList } from './components/NotificationList.tsx';
 import { useCalendarView } from './hooks/useCalendarView.ts';
 import { useEventOperations } from './hooks/useEventOperations.ts';
-import { useEventForm } from './hooks/useEventForm.ts';
 import { useNotifications } from './hooks/useNotifications.ts';
+import { useEventForm } from './hooks/useEventForm.ts';
 import { useSearch } from './hooks/useSearch.ts';
 import { Event, EventForm as EventFormType } from './types';
 
@@ -17,17 +17,12 @@ function App() {
   const [isOverlapDialogOpen, setIsOverlapDialogOpen] = useState(false);
   const [overlappingEvents, setOverlappingEvents] = useState<Event[]>([]);
   const [eventToSave, setEventToSave] = useState<Event | EventFormType | null>(null);
+  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  const {
-    editingEvent,
-    setEditingEvent,
-    editEvent,
-    ...formHook
-  } = useEventForm();
-
-  const { events, saveEvent, deleteEvent } = useEventOperations(
-    Boolean(editingEvent), () => setEditingEvent(null)
+  const formHook = useEventForm(editingEvent);
+  const { events, saveEvent, deleteEvent } = useEventOperations(Boolean(editingEvent), () =>
+    setEditingEvent(null)
   );
   const { notifications, notifiedEvents, setNotifications } = useNotifications(events);
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
@@ -46,9 +41,10 @@ function App() {
       setEventToSave(null);
     }
   };
+
   const handleEventEdit = (event: Event) => {
-    console.log("Editing event:", event);
-    editEvent(event);
+    setEditingEvent(event);
+    formHook.editEvent(event);
   };
 
   const handleEventDelete = (id: string) => {
@@ -66,8 +62,7 @@ function App() {
           events={events}
           onOverlap={handleOverlap}
           saveEvent={saveEvent}
-          initialEvent={editingEvent}
-          {...formHook}
+          formHook={formHook}
         />
         
         <CalendarView 

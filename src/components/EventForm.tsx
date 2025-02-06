@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { 
   Button,
   Checkbox,
@@ -24,15 +24,15 @@ interface EventFormProps {
   onOverlap: (overlappingEvents: Event[], eventData: Event | EventFormType) => void;
   saveEvent: (eventData: Event | EventFormType) => Promise<void>;
   initialEvent?: Event | null;
+  formHook: ReturnType<typeof useEventForm>;
 }
 
 export const EventForm: React.FC<EventFormProps> = ({
   events, 
   onOverlap, 
   saveEvent, 
-  initialEvent
+  formHook
 }) => {
-  const formHook = useEventForm(initialEvent);
   const {
     title,
     date,
@@ -62,16 +62,34 @@ export const EventForm: React.FC<EventFormProps> = ({
     setRepeatInterval,
     setRepeatEndDate,
     setNotificationTime,
-    editEvent
   } = formHook;
+
+  // const [localEditingEvent, setLocalEditingEvent] = useState<Event | null>(null);
 
   const toast = useToast();
 
-  useEffect(() => {
-    if (initialEvent) {
-      editEvent(initialEvent);
-    }
-  }, [initialEvent, editEvent]);
+  // useEffect(() => {
+  //   if (initialEvent && initialEvent !== localEditingEvent) {
+  //     setLocalEditingEvent(initialEvent);
+      
+  //     // 기존 데이터로 초기화되는 것을 방지하기 위해 약간의 지연 추가
+  //     const timeoutId = setTimeout(() => {
+  //       setTitle(initialEvent.title);
+  //       setDate(initialEvent.date);
+  //       setStartTime(initialEvent.startTime);
+  //       setEndTime(initialEvent.endTime);
+  //       setDescription(initialEvent.description || '');
+  //       setLocation(initialEvent.location || '');
+  //       setCategory(initialEvent.category);
+  //       setIsRepeating(initialEvent.repeat.type !== 'none');
+  //       setRepeatType(initialEvent.repeat.type || 'none');
+  //       setRepeatInterval(initialEvent.repeat.interval || 1);
+  //       setRepeatEndDate(initialEvent.repeat.endDate || '');
+  //       setNotificationTime(initialEvent.notificationTime || 10);
+  //     }, 100);
+  //     return () => clearTimeout(timeoutId);
+  //   }
+  // }, [initialEvent]);
 
   const addOrUpdateEvent = async () => {
     const missingFields = [];

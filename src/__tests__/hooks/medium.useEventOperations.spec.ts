@@ -25,11 +25,18 @@ vi.mock('@chakra-ui/react', async () => {
 // useToast()를 호출하면 toastFn이 반환
 
 describe('useEventOperations', () => {
+  const originalConsoleError = console.error;
+
   beforeEach(() => {
+    console.error = vi.fn();
     toastFn.mockClear(); // useToast 함수가 호출된 내역을 초기화
     server.resetHandlers();
   });
 
+  afterEach(() => {
+    console.error = originalConsoleError;
+  });
+  
   it('저장되어있는 초기 이벤트 데이터를 적절하게 불러온다', async () => {
     const mockEvents: Event[] = [
       {

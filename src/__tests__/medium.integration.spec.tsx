@@ -398,9 +398,16 @@ describe('검색 기능', () => {
 });
 
 describe('일정 충돌', () => {
+  const originalConsoleError = console.error;
+
   beforeEach(() => {
+    console.error = vi.fn();
     server.resetHandlers();
     toastFn.mockClear();
+  });
+
+  afterEach(() => {
+    console.error = originalConsoleError;
   });
 
   it('겹치는 시간에 새 일정을 추가할 때 경고가 표시된다', async () => {

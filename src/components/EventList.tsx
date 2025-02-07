@@ -1,4 +1,5 @@
 import React from 'react';
+import { BellIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
   VStack,
   Box,
@@ -9,9 +10,8 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import { BellIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import { Event } from '../types';
 import { notificationOptions } from '../constants/options';
+import { Event } from '../types';
 
 interface EventListProps {
   events: Event[];
@@ -94,7 +94,6 @@ export const EventList: React.FC<EventListProps> = ({
                   aria-label="Edit event"
                   icon={<EditIcon />}
                   onClick={() => {
-                    console.log('EventList: Edit button clicked', event);
                     onEdit(event);
                   }}
                 />
